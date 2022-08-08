@@ -28,10 +28,17 @@ modules:
     parameters:
       service-key:
         name: uaa_library-project-key
+  - name: srv-api
   parameters:
     content:
       instance:
         destinations:
+        - Authentication: OAuth2UserTokenExchange
+          Name: lib_approuter_app_srv
+          ServiceInstanceName: library-project-xsuaa-service
+          ServiceKeyName: uaa_library-project-key
+          URL: ~{srv-api/srv-url}
+          sap.cloud.service: lib_approuter
         - Name: lib_approuter_library_project_html_repo_host
           ServiceInstanceName: library-project-html5-app-host-service
           ServiceKeyName: library-project_html_repo_host-key
