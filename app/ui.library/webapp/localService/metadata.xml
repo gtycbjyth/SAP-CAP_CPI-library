@@ -54,10 +54,10 @@
                 <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
                 <Property Name="title" Type="Edm.String"/>
                 <Property Name="pageNumber" Type="Edm.Int32"/>
-                <Property Name="copyQty" Type="Edm.Int32" DefaultValue="0"/>
-                <Property Name="shippedQty" Type="Edm.Int32" DefaultValue="0"/>
+                <Property Name="copyQty" Type="Edm.Int32"/>
+                <Property Name="shippedQty" Type="Edm.Int32"/>
                 <Property Name="price" Type="Edm.Decimal" Scale="2" Precision="9"/>
-                <Property Name="orderBookEnable" Type="Edm.Boolean" DefaultValue="false"/>
+                <Property Name="orderBookEnable" Type="Edm.Boolean"/>
                 <NavigationProperty Name="currency" Type="LibraryService.Currencies">
                     <ReferentialConstraint Property="currency_code" ReferencedProperty="code"/>
                 </NavigationProperty>
@@ -110,13 +110,12 @@
                 <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
                 <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
                 <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
-                <Property Name="orderCount" Type="Edm.Int32" DefaultValue="1"/>
+                <Property Name="orderCount" Type="Edm.Int32"/>
                 <NavigationProperty Name="book" Type="LibraryService.Library">
                     <ReferentialConstraint Property="book_ID" ReferencedProperty="ID"/>
                 </NavigationProperty>
                 <Property Name="book_ID" Type="Edm.Guid"/>
                 <Property Name="quintyti" Type="Edm.Int32"/>
-                <Property Name="status" Type="Edm.String"/>
                 <NavigationProperty Name="localCurrency" Type="LibraryService.Currencies">
                     <ReferentialConstraint Property="localCurrency_code" ReferencedProperty="code"/>
                 </NavigationProperty>
