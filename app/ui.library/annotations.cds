@@ -1,80 +1,130 @@
 using LibraryService as service from '../../srv/library-service';
 
-annotate service.Library with @(
-    UI.LineItem : [
+annotate service.Library with @(UI : {
+    HeaderInfo : { // добавляет в шапку таблици title и какимто оброзом count (books)
+        TypeName       : 'Books',
+        TypeNamePlural : 'Books',
+    },
+    LineItem   : [
         {
             $Type : 'UI.DataField',
-            Label : 'title',
+            Label : 'Title',
             Value : title,
         },
         {
             $Type : 'UI.DataField',
-            Label : 'pageNumber',
+            Label : 'Page Number',
             Value : pageNumber,
         },
         {
             $Type : 'UI.DataField',
-            Label : 'copyQty',
+            Label : 'Copy Qty',
             Value : copyQty,
         },
         {
             $Type : 'UI.DataField',
-            Label : 'shippedQty',
+            Label : 'Shipped Qty',
             Value : shippedQty,
         },
         {
             $Type : 'UI.DataField',
-            Label : 'price',
+            Label : 'Price',
             Value : price,
         },
+        {
+            $Type : 'UI.DataField',
+            Label : 'Author First Name',
+            Value : author.firstName,
+        },
+        {
+            $Type : 'UI.DataField',
+            Label : 'Author Last Name',
+            Value : author.lastName,
+        }
     ]
-);
+}) { //add еденицу измерения к полю price
+    @Measures.ISOCurrency : currency.code
+    price;
+
+};
+
 annotate service.Library with @(
     UI.FieldGroup #GeneratedGroup1 : {
         $Type : 'UI.FieldGroupType',
-        Data : [
+
+        Data  : [
             {
                 $Type : 'UI.DataField',
-                Label : 'title',
+                Label : 'Book title',
                 Value : title,
             },
             {
                 $Type : 'UI.DataField',
-                Label : 'pageNumber',
-                Value : pageNumber,
-            },
-            {
-                $Type : 'UI.DataField',
-                Label : 'copyQty',
-                Value : copyQty,
-            },
-            {
-                $Type : 'UI.DataField',
-                Label : 'shippedQty',
-                Value : shippedQty,
-            },
-            {
-                $Type : 'UI.DataField',
-                Label : 'price',
+                Label : 'Price',
                 Value : price,
             },
             {
                 $Type : 'UI.DataField',
-                Label : 'orderBookEnable',
-                Value : orderBookEnable,
+                Label : 'Page Number',
+                Value : pageNumber,
             },
             {
                 $Type : 'UI.DataField',
+                Label : 'Currency name',
                 Value : currency_code,
             },
+            {
+                $Type : 'UI.DataField',
+                Label : 'Author',
+                Value : author_ID,
+            },
+           
         ],
     },
-    UI.Facets : [
-        {
-            $Type : 'UI.ReferenceFacet',
-            ID : 'GeneratedFacet1',
-            Label : 'General Information',
-            Target : '@UI.FieldGroup#GeneratedGroup1',
-        },
-    ]
+    UI.Facets                      : [{
+        $Type  : 'UI.ReferenceFacet',
+        ID     : 'GeneratedFacet1',
+        Label  : 'Book Information',
+        Target : '@UI.FieldGroup#GeneratedGroup1',
+    }, ]
 );
+
+annotate LibraryService.Authors with {
+    ID @(
+        UI.Hidden,
+        Common : {
+            Label : 'Last Name',
+            Text  : lastName
+        }
+    );
+}
+
+annotate service.Library with {
+    author @(Common : { //show text, not id for author in the context of library
+        Text            : author.lastName,
+        TextArrangement : #TextOnly,
+        ValueList       : {
+            Label          : 'Authors',
+            CollectionPath : 'Authors',
+            Parameters     : [
+                {
+                    $Type             : 'Common.ValueListParameterInOut',
+                    LocalDataProperty : author_ID,
+                    ValueListProperty : 'ID'
+                },
+                {
+                    $Type             : 'Common.ValueListParameterDisplayOnly',
+                    ValueListProperty : 'firstName'
+                },
+                {
+                    $Type             : 'Common.ValueListParameterDisplayOnly',
+                    ValueListProperty : 'lastName'
+                },
+                {
+                    $Type             : 'Common.ValueListParameterDisplayOnly',
+                    ValueListProperty : 'country_code'
+                }
+            ]
+        }
+    });
+}
