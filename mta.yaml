@@ -3,115 +3,130 @@ ID: library-project
 description: A simple CAP project.
 version: 1.0.0
 modules:
-- name: library-project-srv
-  type: nodejs
-  path: gen/srv
-  provides:
-  - name: srv-api
-    properties:
-      srv-url: ${default-url}
-  parameters:
-    buildpack: nodejs_buildpack
-  build-parameters:
-    builder: npm-ci
-- name: library-project-destination-content
-  type: com.sap.application.content
-  requires:
-  - name: library-project-destination-service
+  - name: library-project-srv
+    type: nodejs
+    path: gen/srv
+    provides:
+      - name: srv-api
+        properties:
+          srv-url: ${default-url}
     parameters:
-      content-target: true
-  - name: library-project_html_repo_host
-    parameters:
-      service-key:
-        name: library-project_html_repo_host-key
-  - name: uaa_library-project
-    parameters:
-      service-key:
-        name: uaa_library-project-key
-  - name: srv-api
-  parameters:
-    content:
-      instance:
-        destinations:
-        - Authentication: OAuth2UserTokenExchange
-          Name: lib_approuter_app_srv
-          ServiceInstanceName: library-project-xsuaa-service
-          ServiceKeyName: uaa_library-project-key
-          URL: ~{srv-api/srv-url}
-          sap.cloud.service: lib_approuter
-        - Name: lib_approuter_library_project_html_repo_host
-          ServiceInstanceName: library-project-html5-app-host-service
-          ServiceKeyName: library-project_html_repo_host-key
-          sap.cloud.service: lib_approuter
-        - Authentication: OAuth2UserTokenExchange
-          Name: lib_approuter_uaa_library_project
-          ServiceInstanceName: library-project-xsuaa-service
-          ServiceKeyName: uaa_library-project-key
-          sap.cloud.service: lib_approuter
-        existing_destinations_policy: ignore
-  build-parameters:
-    no-source: true
-- name: library-project-app-content
-  type: com.sap.application.content
-  path: .
-  requires:
-  - name: library-project_html_repo_host
-    parameters:
-      content-target: true
-  build-parameters:
-    build-result: resources
+      buildpack: nodejs_buildpack
+    build-parameters:
+      builder: npm-ci
     requires:
-    - artifacts:
-      - nsuilibrary.zip
-      name: nsuilibrary
-      target-path: resources/
-- name: nsuilibrary
-  type: html5
-  path: app/ui.library
-  build-parameters:
-    build-result: dist
-    builder: custom
-    commands:
-    - npm install
-    - npm run build:cf
-    supported-platforms: []
-resources:
-- name: library-project-destination-service
-  type: org.cloudfoundry.managed-service
-  parameters:
-    config:
-      HTML5Runtime_enabled: true
-      init_data:
+      - name: library-project-db
+  - name: library-project-destination-content
+    type: com.sap.application.content
+    requires:
+      - name: library-project-destination-service
+        parameters:
+          content-target: true
+      - name: library-project_html_repo_host
+        parameters:
+          service-key:
+            name: library-project_html_repo_host-key
+      - name: uaa_library-project
+        parameters:
+          service-key:
+            name: uaa_library-project-key
+      - name: srv-api
+    parameters:
+      content:
         instance:
           destinations:
-          - Authentication: NoAuthentication
-            Name: ui5
-            ProxyType: Internet
-            Type: HTTP
-            URL: https://ui5.sap.com
-          existing_destinations_policy: update
-      version: 1.0.0
-    service: destination
-    service-name: library-project-destination-service
-    service-plan: lite
-- name: library-project_html_repo_host
-  type: org.cloudfoundry.managed-service
-  parameters:
-    service: html5-apps-repo
-    service-name: library-project-html5-app-host-service
-    service-plan: app-host
-- name: uaa_library-project
-  type: org.cloudfoundry.managed-service
-  parameters:
-    path: ./xs-security.json
-    service: xsuaa
-    service-name: library-project-xsuaa-service
-    service-plan: application
+            - Authentication: OAuth2UserTokenExchange
+              Name: lib_approuter_app_srv
+              ServiceInstanceName: library-project-xsuaa-service
+              ServiceKeyName: uaa_library-project-key
+              URL: ~{srv-api/srv-url}
+              sap.cloud.service: lib_approuter
+            - Name: lib_approuter_library_project_html_repo_host
+              ServiceInstanceName: library-project-html5-app-host-service
+              ServiceKeyName: library-project_html_repo_host-key
+              sap.cloud.service: lib_approuter
+            - Authentication: OAuth2UserTokenExchange
+              Name: lib_approuter_uaa_library_project
+              ServiceInstanceName: library-project-xsuaa-service
+              ServiceKeyName: uaa_library-project-key
+              sap.cloud.service: lib_approuter
+          existing_destinations_policy: ignore
+    build-parameters:
+      no-source: true
+  - name: library-project-app-content
+    type: com.sap.application.content
+    path: .
+    requires:
+      - name: library-project_html_repo_host
+        parameters:
+          content-target: true
+    build-parameters:
+      build-result: resources
+      requires:
+        - artifacts:
+            - nsuilibrary.zip
+          name: nsuilibrary
+          target-path: resources/
+  - name: nsuilibrary
+    type: html5
+    path: app/ui.library
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm install
+        - npm run build:cf
+      supported-platforms: []
+
+  - name: library-project-db-deployer
+    type: hdb
+    path: gen/db
+    parameters:
+      buildpack: nodejs_buildpack
+    requires:
+      - name: library-project-db
+resources:
+  - name: library-project-destination-service
+    type: org.cloudfoundry.managed-service
+    parameters:
+      config:
+        HTML5Runtime_enabled: true
+        init_data:
+          instance:
+            destinations:
+              - Authentication: NoAuthentication
+                Name: ui5
+                ProxyType: Internet
+                Type: HTTP
+                URL: https://ui5.sap.com
+            existing_destinations_policy: update
+        version: 1.0.0
+      service: destination
+      service-name: library-project-destination-service
+      service-plan: lite
+  - name: library-project_html_repo_host
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-name: library-project-html5-app-host-service
+      service-plan: app-host
+  - name: uaa_library-project
+    type: org.cloudfoundry.managed-service
+    parameters:
+      path: ./xs-security.json
+      service: xsuaa
+      service-name: library-project-xsuaa-service
+      service-plan: application
+  - name: library-project-db
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hana
+      service-plan: hdi-shared
 parameters:
   deploy_mode: html5-repo
   enable-parallel-deployments: true
 build-parameters:
   before-all:
-  - builder: custom
-    commands:
-    - npx -p @sap/cds-dk cds build --production
+    - builder: custom
+      commands:
+        - npx -p @sap/cds-dk cds build --production
