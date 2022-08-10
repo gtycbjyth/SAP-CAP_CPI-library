@@ -9,11 +9,10 @@
             "destination": "ui5"
         },
         {
-            "source": "^/library/(.*)$",
-            "target": "/library/$1",
-            "destination": "lib_approuter_app_srv",
-            "authenticationType": "xsuaa",
-            "csrfProtection": false
+            "source": "^/test-resources/(.*)$",
+            "target": "/test-resources/$1",
+            "authenticationType": "none",
+            "destination": "ui5"
         },
         {
             "source": "^/library/(.*)$",

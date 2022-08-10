@@ -53,7 +53,7 @@ modules:
           existing_destinations_policy: ignore
     build-parameters:
       no-source: true
-  - name: library-project-app-content
+  - name: library-project-app-content # module for deploing our ui modules
     type: com.sap.application.content
     path: .
     requires:
@@ -67,9 +67,23 @@ modules:
             - nsuilibrary.zip
           name: nsuilibrary
           target-path: resources/
-  - name: nsuilibrary
+        - artifacts:
+            - nsuiauthors.zip
+          name: nsuiauthors
+          target-path: resources/
+  - name: nsuilibrary # UI module
     type: html5
     path: app/ui.library
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm install
+        - npm run build:cf
+      supported-platforms: []
+  - name: nsuiauthors # UI module
+    type: html5
+    path: app/ui.authors
     build-parameters:
       build-result: dist
       builder: custom
