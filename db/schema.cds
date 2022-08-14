@@ -4,22 +4,27 @@ using { cuid, managed, Country, Currency } from '@sap/cds/common';
 entity Library: managed {
     key ID      : UUID  @(Core.Computed : true);
     title: String;
-    pageNumber: Integer;
-    copyQty: Integer;
+    pageNumber: Integer @assert.range: [ 0, 99999999999 ];
+    copyQty: Integer default 0 @assert.range: [ 0, 99999999999 ];
     shippedQty: Integer;
-    price: Decimal(9,2);
+    price: Decimal(9,2) @assert.range: [ 0, 99999999999 ];
     orderBookEnable: Boolean;
     currency: Currency;
     author: Association to Authors; 
     orders: Association to BookOrder;
 }
 
-entity BookOrder: managed {
+entity BookOrder@(Capabilities:{
+  InsertRestrictions.Insertable: true,
+  UpdateRestrictions.Updatable: false,
+  DeleteRestrictions.Deletable: false
+}): managed {
     key ID      : UUID  @(Core.Computed : true);
     orderCount: Integer;
     book: Association to Library;
-    quintyti: Integer;
+    orderQti: Integer default 0 @assert.range: [ 0, 99999999999 ];
     localCurrency: Currency;
+    status: Status;
 }
 
 entity Authors: managed {
@@ -27,7 +32,7 @@ entity Authors: managed {
     firstName: String;
     lastName: String;
     birthday: Date;
-    country: Country;
+    country: Country default 0;
     books: Association to many Library on books.author = $self;
     }
 
@@ -38,4 +43,11 @@ entity Readers: managed {
     birthday: Date;
     phone: String;
     image: String;
+}
+
+ type Status: String enum {
+    Open;
+    Requested;
+    Rejected;
+    Closed;
 }
