@@ -13,26 +13,6 @@ annotate service.Library with @(UI : {
         },
         {
             $Type : 'UI.DataField',
-            Label : 'Page Number',
-            Value : pageNumber,
-        },
-        {
-            $Type : 'UI.DataField',
-            Label : 'Copy Qty',
-            Value : copyQty,
-        },
-        {
-            $Type : 'UI.DataField',
-            Label : 'Shipped Qty',
-            Value : shippedQty,
-        },
-        {
-            $Type : 'UI.DataField',
-            Label : 'Price',
-            Value : price,
-        },
-        {
-            $Type : 'UI.DataField',
             Label : 'Author First Name',
             Value : author.firstName,
         },
@@ -40,6 +20,21 @@ annotate service.Library with @(UI : {
             $Type : 'UI.DataField',
             Label : 'Author Last Name',
             Value : author.lastName,
+        },
+        {
+            $Type : 'UI.DataField',
+            Label : 'Page Number',
+            Value : pageNumber,
+        },
+        {
+            $Type : 'UI.DataField',
+            Label : 'Total Сopies',
+            Value : copyQty,
+        },
+        {
+            $Type : 'UI.DataField',
+            Label : 'Price',
+            Value : price,
         }
     ]
 }) { //add еденицу измерения к полю price

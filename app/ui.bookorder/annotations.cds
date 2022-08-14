@@ -1,4 +1,5 @@
 using LibraryService as service from '../../srv/library-service';
+using from '@sap/cds/common';
 
 annotate service.BookOrder with @(
     UI.LineItem : [
@@ -9,8 +10,13 @@ annotate service.BookOrder with @(
             },
            {
                 $Type : 'UI.DataField',
-                Label : 'Quintyti',
-                Value : quintyti,
+                Label : 'Order status',
+                Value : status,
+            },
+           {
+                $Type : 'UI.DataField',
+                Label : 'Quantity',
+                Value : orderQti,
             },
             {
                 $Type : 'UI.DataField',
@@ -19,19 +25,29 @@ annotate service.BookOrder with @(
             },
             {
                 $Type : 'UI.DataField',
-                Label : 'book_IDy',
-                Value : book_ID,
+                Label : 'Book title',
+                Value : book.title,
             },
             {
                 $Type : 'UI.DataField',
-                Label : 'Local title',
-                Value : book.title,
+                Label : 'First Name',
+                Value : book.author.firstName,
+            },
+            {
+                $Type : 'UI.DataField',
+                Label : 'Last Name',
+                Value : book.author.firstName,
             },
             {
                 $Type : 'UI.DataField',
                 Label : 'pageNumber',
                 Value : book.pageNumber,
             },
+        {
+            $Type : 'UI.DataFieldForAction',
+            Action : 'LibraryService.orderBook',
+            Label : 'Order book',
+        },
     ],
 
     UI.FieldGroup #GeneratedGroup1 : {
@@ -39,31 +55,21 @@ annotate service.BookOrder with @(
         Data : [
             {
                 $Type : 'UI.DataField',
-                Label : 'Quintyti',
-                Value : quintyti,
+                Value : orderCount,
+                Label : 'Order №',
+            },
+            {
+                $Type : 'UI.DataField',
+                Label : 'Quantity',
+                Value : orderQti,
             },
             {
                 $Type : 'UI.DataField',
                 Label : 'Local Currency',
                 Value : localCurrency_code,
             },
-            {
-                $Type : 'UI.DataField',
-                Label : 'book_IDy',
-                Value : book_ID,
-            },
-            {
-                $Type : 'UI.DataField',
-                Label : 'Local title',
-                Value : book.title,
-            },
-            {
-                $Type : 'UI.DataField',
-                Label : 'pageNumber',
-                Value : book.pageNumber,
-            },
         ],
-    },
+    },    
 //TODO: add normal annatation
     UI.Facets : [
         {
@@ -71,6 +77,12 @@ annotate service.BookOrder with @(
             ID : 'GeneratedFacet1',
             Label : 'Order Option',
             Target : '@UI.FieldGroup#GeneratedGroup1',
+        },
+        {
+            $Type : 'UI.ReferenceFacet',
+            Label : 'Book Info',
+            ID : 'indsec',
+            Target : '@UI.Identification',
         },
         // {
         //     $Type: 'UI.ReferenceFacet',
@@ -91,7 +103,10 @@ annotate service.BookOrder with @(
 
 annotate service.BookOrder with {
     book @(Common : {
-        Text : book.title,
+        Text : {
+                $value : book.title,
+                ![@UI.TextArrangement] : #TextOnly,
+            },
         ValueList :{
             Label: 'Library',
             CollectionPath: 'Library',
@@ -132,3 +147,114 @@ annotate service.BookOrder with {
     )
 };
 
+annotate service.BookOrder with @(
+    UI.Identification : [
+        {
+            $Type : 'UI.DataFieldForAction',
+            Action : 'LibraryService.orderBook',
+            Label : 'Order Book',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : book_ID,
+            Label : 'Book ',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : book.author.firstName,
+            Label : 'firstName',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : book.author.lastName,
+            Label : 'lastName',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : book.price,
+            Label : 'price',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : book.copyQty,
+            Label : 'Сopies in the library',
+        },]
+);
+annotate service.BookOrder with @(
+    UI.SelectionPresentationVariant #tableView : {
+        $Type : 'UI.SelectionPresentationVariantType',
+        PresentationVariant : {
+            $Type : 'UI.PresentationVariantType',
+            Visualizations : [
+                '@UI.LineItem',
+            ],
+        },
+        SelectionVariant : {
+            $Type : 'UI.SelectionVariantType',
+            SelectOptions : [
+            ],
+        },
+        Text : 'Table View',
+    },
+    UI.LineItem #tableView : [
+    ],
+    UI.SelectionPresentationVariant #tableView1 : {
+        $Type : 'UI.SelectionPresentationVariantType',
+        PresentationVariant : {
+            $Type : 'UI.PresentationVariantType',
+            Visualizations : [
+                '@UI.LineItem#tableView',
+            ],
+        },
+        SelectionVariant : {
+            $Type : 'UI.SelectionVariantType',
+            SelectOptions : [
+            ],
+        },
+        Text : 'Table View 1',
+    }
+);
+annotate service.Library with @(
+    Communication.Contact #contact : {
+        $Type : 'Communication.ContactType',
+        fn : title,
+    }
+);
+annotate service.Library with {
+    orders @Common.FieldControl : #ReadOnly
+};
+annotate service.BookOrder with {
+    orderCount @Common.FieldControl : #ReadOnly
+};
+annotate service.Library with {
+    copyQty @Common.FieldControl : #ReadOnly
+};
+annotate service.Authors with {
+    lastName @Common.FieldControl : #ReadOnly
+};
+annotate service.Authors with {
+    firstName @Common.FieldControl : #ReadOnly
+};
+annotate service.BookOrder with @(
+    UI.HeaderInfo : {
+        TypeName : 'Book Order',
+        TypeNamePlural : 'Book order',
+    }
+);
+annotate service.BookOrder with {
+    orderQti @Common.FieldControl : #ReadOnly
+};
+annotate service.Currencies with {
+    code @(Common.ValueList : {
+            $Type : 'Common.ValueListType',
+            CollectionPath : 'Currencies',
+            Parameters : [
+                {
+                    $Type : 'Common.ValueListParameterInOut',
+                    LocalDataProperty : code,
+                    ValueListProperty : 'name',
+                },
+            ],
+        },
+        Common.ValueListWithFixedValues : true
+)};
