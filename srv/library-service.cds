@@ -2,9 +2,7 @@ using my.library as my   from '../db/schema';
 
 service LibraryService {
     entity Library as projection on my.Library 
-    entity Authors as projection on my.Authors actions{
-        action test2() returns Authors;
-    }
+    entity Authors as projection on my.Authors
     entity BookOrder as projection on my.BookOrder actions{
         action orderBook(orderProp: Integer);
     }

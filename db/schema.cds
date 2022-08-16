@@ -14,9 +14,9 @@ entity Library: managed {
     orders: Association to BookOrder;
 }
 
-entity BookOrder@(Capabilities:{
+entity BookOrder @(Capabilities:{
   InsertRestrictions.Insertable: true,
-  UpdateRestrictions.Updatable: false,
+  UpdateRestrictions.Updatable: true,
   DeleteRestrictions.Deletable: false
 }): managed {
     key ID      : UUID  @(Core.Computed : true);
@@ -32,7 +32,7 @@ entity Authors: managed {
     firstName: String;
     lastName: String;
     birthday: Date;
-    country: Country default 0;
+    country: Country;
     books: Association to many Library on books.author = $self;
     }
 

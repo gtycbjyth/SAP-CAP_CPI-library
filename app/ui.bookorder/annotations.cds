@@ -84,22 +84,19 @@ annotate service.BookOrder with @(
             ID : 'indsec',
             Target : '@UI.Identification',
         },
-        // {
-        //     $Type: 'UI.ReferenceFacet',
-        //     ID : 'GeneratedFacet2',
-        //     Label : 'Author',
-        //     Target : '@UI.FieldGroup#GeneratedGroup2',
-        // }
     ],
-    // UI.FieldGroup #GeneratedGroup2: {
-    //     $Type: UI.FieldGroupType,
-    //     Data : [
-    //         {
-    //             $Type: UI
-    //         }
-    //     ],
-    // }
 );
+
+annotate LibraryService.Library with {
+    ID @(
+        UI.Hidden,
+        Common : {
+            Label : 'Title',
+            Text  : title
+        }
+    );
+}
+
 
 annotate service.BookOrder with {
     book @(Common : {
@@ -161,21 +158,6 @@ annotate service.BookOrder with @(
         },
         {
             $Type : 'UI.DataField',
-            Value : book.author.firstName,
-            Label : 'firstName',
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : book.author.lastName,
-            Label : 'lastName',
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : book.price,
-            Label : 'price',
-        },
-        {
-            $Type : 'UI.DataField',
             Value : book.copyQty,
             Label : 'Сopies in the library',
         },]
@@ -228,12 +210,6 @@ annotate service.BookOrder with {
 };
 annotate service.Library with {
     copyQty @Common.FieldControl : #ReadOnly
-};
-annotate service.Authors with {
-    lastName @Common.FieldControl : #ReadOnly
-};
-annotate service.Authors with {
-    firstName @Common.FieldControl : #ReadOnly
 };
 annotate service.BookOrder with @(
     UI.HeaderInfo : {

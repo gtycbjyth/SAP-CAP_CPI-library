@@ -38,7 +38,7 @@ annotate service.Library with @(UI : {
         }
     ]
 }) { //add еденицу измерения к полю price
-    @Measures.ISOCurrency : currency.code
+    @Measures.ISOCurrency : currency_code
     price;
 
 };
@@ -55,18 +55,13 @@ annotate service.Library with @(
             },
             {
                 $Type : 'UI.DataField',
-                Label : 'Price',
-                Value : price,
-            },
-            {
-                $Type : 'UI.DataField',
                 Label : 'Page Number',
                 Value : pageNumber,
             },
             {
                 $Type : 'UI.DataField',
-                Label : 'Currency name',
-                Value : currency_code,
+                Label : 'Price',
+                Value : price,
             },
             {
                 $Type : 'UI.DataField',
