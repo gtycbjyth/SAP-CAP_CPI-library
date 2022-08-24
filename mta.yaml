@@ -8,6 +8,8 @@ modules:
   path: gen/srv
   requires:
   - name: library-project-db
+  - name: dest_service
+  - name: uaa_library-project
   provides:
   - name: srv-api
     properties:
@@ -149,6 +151,11 @@ resources:
   parameters:
     service: hana
     service-plan: hdi-shared
+- name: dest_service
+  type: org.cloudfoundry.existing-service
+  parameters:
+    service-plan: lite
+    service: destination
 parameters:
   deploy_mode: html5-repo
   enable-parallel-deployments: true

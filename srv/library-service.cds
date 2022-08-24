@@ -4,7 +4,7 @@ service LibraryService {
     entity Library as projection on my.Library 
     entity Authors as projection on my.Authors
     entity BookOrder as projection on my.BookOrder actions{
-        action orderBook(orderProp: Integer);
+        action orderBook(orderProp: Integer @title : 'New Title');
     }
     entity Readers as projection on my.Readers
 }
