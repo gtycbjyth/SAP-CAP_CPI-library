@@ -23,7 +23,9 @@ entity BookOrder @(Capabilities:{
     orderCount: Integer;
     book: Association to Library;
     orderQti: Integer default 0 @assert.range: [ 0, 99999999999 ];
-    localCurrency: Currency;
+    LocalCurrencyCode: String default 'BYN';
+    totalPrice: Decimal(9,2);
+    totalLocal: Decimal(9,2);
     status: Status;
 }
 

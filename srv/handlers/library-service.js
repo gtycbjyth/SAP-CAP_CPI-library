@@ -11,11 +11,11 @@ module.exports = cds.service.impl(function () {
         const author = await SELECT.one.from('Authors').where({ ID: book.author_ID });
         const cpiReqData = orderDataForCPI(req, order, book, author);
         
-        console.log(cpiReqData);
+        // console.log(cpiReqData);
         
-        await cpi(req, cpiReqData);
+        const cpiResponse = await cpi(req, cpiReqData);
         
-        console.log(test);
+        // console.log(cpiResponse);
 
         // await cpie.tx(req).post('/http/orderFlow');
         // const query = cds.parse.cql(`SELECT * FROM BookOrder WHERE ID='${ID}'`);
@@ -25,7 +25,9 @@ module.exports = cds.service.impl(function () {
         //  const test = await UPDATE (BookOrder, {ID:ID}) .with({orderQti: req.data.orderProp});
         const bookOrder = await UPDATE`BookOrder`
             .set`orderQti = ${req.data.orderProp}`
-            .set`status = 'Requested'`
+            .set`LocalCurrencyCode = ${cpiResponse.LocalCurrencyCode_code}`
+            .set`totalPrice = ${cpiResponse.totalPrice}`
+            .set`totalLocal = ${cpiResponse.totalPrice}`
             .set`status = 'Requested'`
             .where`ID=${ID}`;
         // await cpi();

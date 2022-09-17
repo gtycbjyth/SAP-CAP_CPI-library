@@ -2,10 +2,10 @@ const cds = require('@sap/cds');
 
  const cpi = async function (req, reqData) {
     const cpi = await cds.connect.to('CPIDestination');
-    await await cpi.tx(req).post('/http/orderFlow', reqData)
+    const res = await await cpi.tx(req).post('/http/orderFlow', reqData)
     console.log('*************************************************');
     // await UPDATE(Books, { bookUUID: bookUUID }).with({ status_ID: "1" });
-
+    return res
 };
 
 const orderDataForCPI =  function (req, order, book, author) {
