@@ -1,5 +1,6 @@
 const cds = require('@sap/cds');
-// const cpi = require('./cpi');
+const  { cpi, orderDataForCPI }  = require('./assets/cpi');
+
 
 module.exports = cds.service.impl(function () {
     const { SELECT, UPDATE, INSERT } = cds.ql
@@ -7,20 +8,14 @@ module.exports = cds.service.impl(function () {
         const [{ ID }] = req.params
         const order = await SELECT.one.from('BookOrder').where({ ID: ID });
         const book = await SELECT.one.from('Library').where({ ID: order.book_ID });
-        const cpiReqData = { 
-            "price": +book.price, 
-            "copyQty": req.data.orderProp, 
-            "localCurrency": order.localCurrency_code,
-            "currency": book.currency_code
-        }
-
-
-console.log(cpiReqData);
-
-        const cpi = await cds.connect.to('CPIDestination');
-        const test = await cpi.tx(req).post('/http/orderFlow', cpiReqData);
-
-console.log(test);
+        const author = await SELECT.one.from('Authors').where({ ID: book.author_ID });
+        const cpiReqData = orderDataForCPI(req, order, book, author);
+        
+        console.log(cpiReqData);
+        
+        await cpi(req, cpiReqData);
+        
+        console.log(test);
 
         // await cpie.tx(req).post('/http/orderFlow');
         // const query = cds.parse.cql(`SELECT * FROM BookOrder WHERE ID='${ID}'`);
