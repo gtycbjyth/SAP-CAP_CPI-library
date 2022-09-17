@@ -13,40 +13,35 @@ annotate service.BookOrder with @(
                 Label : 'Order status',
                 Value : status,
             },
+        {
+            $Type : 'UI.DataField',
+            Value : orderQti,
+            Label : 'Order Quantity',
+        },
            {
-                $Type : 'UI.DataField',
-                Label : 'Quantity',
-                Value : orderQti,
-            },
-            {
-                $Type : 'UI.DataField',
-                Label : 'Local Currency',
-                Value : localCurrency_code,
-            },
-            {
                 $Type : 'UI.DataField',
                 Label : 'Book title',
                 Value : book.title,
             },
-            {
-                $Type : 'UI.DataField',
-                Label : 'First Name',
-                Value : book.author.firstName,
-            },
-            {
-                $Type : 'UI.DataField',
-                Label : 'Last Name',
-                Value : book.author.firstName,
-            },
-            {
-                $Type : 'UI.DataField',
-                Label : 'pageNumber',
-                Value : book.pageNumber,
-            },
         {
+                $Type : 'UI.DataField',
+                Label : 'Author First Name',
+                Value : book.author.firstName,
+            },
+            {
             $Type : 'UI.DataFieldForAction',
             Action : 'LibraryService.orderBook',
             Label : 'Order book',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : book.author.lastName,
+            Label : 'Author Last Name',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : totalPrice,
+            Label : 'Total Price',
         },
     ],
 
@@ -60,13 +55,23 @@ annotate service.BookOrder with @(
             },
             {
                 $Type : 'UI.DataField',
+                Value : status,
+                Label : 'Ordeer Status',
+            },
+            {
+                $Type : 'UI.DataField',
                 Label : 'Quantity',
                 Value : orderQti,
             },
             {
                 $Type : 'UI.DataField',
-                Label : 'Local Currency',
-                Value : localCurrency_code,
+                Value : totalPrice,
+                Label : 'Total Price',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : totalLocal,
+                Label : 'Total Local Price',
             },
         ],
     },    
@@ -105,7 +110,7 @@ annotate service.BookOrder with {
                 ![@UI.TextArrangement] : #TextOnly,
             },
         ValueList :{
-            Label: 'Library',
+            Label: 'Books',
             CollectionPath: 'Library',
             Parameters: [
                 {
@@ -115,7 +120,8 @@ annotate service.BookOrder with {
                 },
                 {
                     $Type             : 'Common.ValueListParameterDisplayOnly',
-                    ValueListProperty : 'title'
+                    ValueListProperty : 'title',
+                    
                 },
                 {
                     $Type             : 'Common.ValueListParameterDisplayOnly',
@@ -123,20 +129,13 @@ annotate service.BookOrder with {
                 },
                 {
                     $Type             : 'Common.ValueListParameterDisplayOnly',
-                    ValueListProperty : 'price'
-                },
-                {
-                    $Type             : 'Common.ValueListParameterDisplayOnly',
-                    ValueListProperty : 'currency_code'
-                },
-                {
-                    $Type             : 'Common.ValueListParameterDisplayOnly',
                     ValueListProperty : 'pageNumber'
                 },
                 {
                     $Type             : 'Common.ValueListParameterDisplayOnly',
-                    ValueListProperty : 'shippedQty'
-                },
+                    ValueListProperty : 'price'
+                }
+                
             ]
         }
     }
@@ -147,14 +146,9 @@ annotate service.BookOrder with {
 annotate service.BookOrder with @(
     UI.Identification : [
         {
-            $Type : 'UI.DataFieldForAction',
-            Action : 'LibraryService.orderBook',
-            Label : 'Order Book',
-        },
-        {
             $Type : 'UI.DataField',
             Value : book_ID,
-            Label : 'Book ',
+            Label : 'Book',
         },
         {
             $Type : 'UI.DataField',
@@ -234,3 +228,25 @@ annotate service.Currencies with {
         },
         Common.ValueListWithFixedValues : true
 )};
+annotate service.BookOrder with {
+    totalPrice @Common.FieldControl : #ReadOnly
+};
+annotate service.BookOrder with {
+    status @Common.FieldControl : #ReadOnly
+};
+annotate service.BookOrder with {
+    totalLocal @Common.FieldControl : #ReadOnly
+};
+annotate service.BookOrder with {
+    totalPrice @Common.Text :  book.currency_code
+};
+annotate service.BookOrder with {
+    totalLocal @Common.Text : LocalCurrencyCode
+};
+annotate service.Library with @(
+    UI.DataPoint #price : {
+        Value : price,
+        Visualization : #Rating,
+        TargetValue : 5,
+    }
+);
