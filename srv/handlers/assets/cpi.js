@@ -1,5 +1,9 @@
 const cds = require('@sap/cds');
 
+
+//TODO: add error heandler for async code
+//TODO: think about transaction: ask Vera
+
  const cpi = async function (req, reqData) {
     const cpi = await cds.connect.to('CPIDestination');
     const res = await await cpi.tx(req).post('/http/orderFlow', reqData)
@@ -25,8 +29,6 @@ const orderDataForCPI =  function (req, order, book, author) {
         "status_ID": order.status,
         "totalPrice": totalPrice
     }
-
-    return data;
 };
 
 module.exports = { cpi, orderDataForCPI }
