@@ -9,8 +9,10 @@ service LibraryService {
     entity Readers as projection on my.Readers
 }
 
-
 annotate LibraryService.Library with  @odata.draft.enabled;
 annotate LibraryService.Authors with  @odata.draft.enabled;
 annotate LibraryService.BookOrder with  @odata.draft.enabled;
 annotate LibraryService.Readers with  @odata.draft.enabled;
+
+
+
